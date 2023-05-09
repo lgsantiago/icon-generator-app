@@ -6,12 +6,16 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { Input } from "~/component/input";
 import { FormGroup } from "~/component/FormGroup";
+import { Button } from "~/component/Button";
 import { useState } from "react";
 
 const GeneratePage: NextPage = () => {
   const [form, setForm] = useState({
     prompt: "",
   });
+
+  const session = useSession();
+  const isLoggedIn = !!session.data;
 
   const generateIcon = api.generate.generateIcon.useMutation({
     onSuccess(data) {
@@ -43,15 +47,16 @@ const GeneratePage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center">
+        {!isLoggedIn && <Button onClick={signIn}>Login</Button>}
+        <div>{session?.data?.user.name}</div>
         <form className="flex flex-col" onSubmit={(e) => handleFormSubmit(e)}>
           <FormGroup>
             <label>Prompt</label>
             <Input value={form.prompt} onChange={updateForm("prompt")}></Input>
-            <button className="rounded bg-blue-400 px-4 py-2 hover:bg-blue-50">
-              Submit
-            </button>
+            <Button>Submit</Button>
           </FormGroup>
         </form>
+        {isLoggedIn && <Button onClick={signOut}>Logout</Button>}
       </main>
     </>
   );
