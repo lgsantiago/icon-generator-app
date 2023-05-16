@@ -27,6 +27,11 @@ const config = {
         hostname: "oaidalleapiprodscus.blob.core.windows.net",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "icon-generator-ai-app.s3.amazonaws.com",
+        port: "",
+      },
     ],
   },
 };

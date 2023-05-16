@@ -11,6 +11,8 @@ import { env } from "~/env.mjs";
 import { base64Image } from "~/data/base64Image";
 import AWS from "aws-sdk";
 
+const BUCKET_NAME = "icon-generator-ai-app";
+
 // AWS S3 bucket configuration
 const s3 = new AWS.S3({
   credentials: {
@@ -90,6 +92,8 @@ export const generateRouter = createTRPCRouter({
         })
         .promise();
 
-      return { imageUrl: base64EncondedImage };
+      return {
+        imageUrl: `https://${BUCKET_NAME}.s3.amazonaws.com/clhpgfc010001pn0t810ujtd5`,
+      };
     }),
 });
