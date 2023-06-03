@@ -8,8 +8,10 @@ import { FormGroup } from "~/component/FormGroup";
 import { Button } from "~/component/Button";
 import { useState } from "react";
 import Image from "next/image";
+import { useBuyCredits } from "~/hooks/useBuyCredits";
 
 const GeneratePage: NextPage = () => {
+  const { buyCredits } = useBuyCredits();
   const [form, setForm] = useState({
     prompt: "",
   });
@@ -26,7 +28,7 @@ const GeneratePage: NextPage = () => {
     },
   });
 
-  function handleFormSubmit(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     generateIcon.mutate({
       prompt: form.prompt,
@@ -51,8 +53,33 @@ const GeneratePage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center">
-        {!isLoggedIn && <Button onClick={signIn}>Login</Button>}
-        {isLoggedIn && <Button onClick={signOut}>Logout</Button>}
+        {!isLoggedIn && (
+          <Button
+            onClick={() => {
+              signIn().catch(console.error);
+            }}
+          >
+            Login
+          </Button>
+        )}
+        {isLoggedIn && (
+          <>
+            <Button
+              onClick={() => {
+                buyCredits().catch(console.error);
+              }}
+            >
+              Buy Credits
+            </Button>
+            <Button
+              onClick={() => {
+                signOut().catch(console.error);
+              }}
+            >
+              Logout
+            </Button>
+          </>
+        )}
         <div>Welcome {session?.data?.user.name}</div>
         <form
           className="flex flex-col py-5"
@@ -65,7 +92,6 @@ const GeneratePage: NextPage = () => {
           </FormGroup>
         </form>
 
-        {/* <img src={imageUrl} /> */}
         {imageUrl && (
           <Image
             src={imageUrl}
